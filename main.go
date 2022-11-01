@@ -15,6 +15,10 @@ func main() {
 	teamService := services.NewServiceTeam(teamRepository)
 	teamController := controllers.NewControllerTeam(teamService)
 
+	projectRepository := repositories.NewRepositoryProject(db)
+	projectService := services.NewServiceProject(projectRepository)
+	projectController := controllers.NewControllerProject(projectService)
+
 	r := gin.Default()
 	api := r.Group("/api")
 	{
@@ -22,6 +26,11 @@ func main() {
 		{
 			team.GET("/getteams", teamController.FindAllTeams)
 			team.GET("/getteam/:teamcode", teamController.FindByIdTeam)
+		}
+		project := api.Group("/project")
+		{
+			project.GET("/getprojects", projectController.FindAllProjects)
+			project.GET("/getproject/:projectcode", projectController.FindByIdProject)
 		}
 	}
 	r.Run()

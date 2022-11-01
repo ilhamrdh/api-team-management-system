@@ -10,6 +10,12 @@ type ProjectServiceImpl struct {
 	ProjectRepository repositories.ProjectRepository
 }
 
+func NewServiceProject(projectRepository repositories.ProjectRepository) ProjectService {
+	return &ProjectServiceImpl{
+		ProjectRepository: projectRepository,
+	}
+}
+
 func (service *ProjectServiceImpl) FindByIdProject(projectcode string) (web.ProjectResponse, error) {
 	project, err := service.ProjectRepository.FindByIdProject(projectcode)
 	return helper.ToProjectResponse(project), err

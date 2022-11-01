@@ -3,7 +3,6 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/IlhamRamadhan-IR/api-team-management-system/models/web"
 	"github.com/IlhamRamadhan-IR/api-team-management-system/services"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -49,12 +48,7 @@ func (controller *TeamControllerImpl) FindAllTeams(c *gin.Context) {
 		})
 		return
 	}
-	webResponse := web.WebResponse{
-		Code:   200,
-		Status: "OK",
-		Data:   teams,
-	}
 	c.JSON(http.StatusOK, gin.H{
-		"": webResponse,
+		"data": teams,
 	})
 }

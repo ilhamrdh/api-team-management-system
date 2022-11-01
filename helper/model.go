@@ -26,3 +26,23 @@ func ToTeamResponses(teams []domain.Team) []web.TeamResponse {
 	}
 	return teamResponses
 }
+
+func ToProjectResponse(project domain.Project) web.ProjectResponse {
+	return web.ProjectResponse{
+		ProjectCode: project.ProjectCode,
+		ProjectName: project.ProjectName,
+		Deadline:    project.Deadline,
+		Status:      project.Status,
+		CreatedAt:   project.CreatedAt,
+		UpdatedAt:   project.UpdatedAt,
+		DeletedAt:   project.DeletedAt,
+	}
+}
+
+func ToProjectResponses(projects []domain.Project) []web.ProjectResponse {
+	var projectResponses []web.ProjectResponse
+	for _, project := range projects {
+		projectResponses = append(projectResponses, ToProjectResponse(project))
+	}
+	return projectResponses
+}

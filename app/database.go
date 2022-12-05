@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/IlhamRamadhan-IR/api-team-management-system/models/domain"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -17,7 +16,7 @@ func InitDatabase() *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&domain.Team{})
-
+	// db.AutoMigrate()
+	db.Migrator()
 	return db
 }

@@ -6,31 +6,28 @@ import (
 	"github.com/IlhamRamadhan-IR/api-team-management-system/repositories"
 	"github.com/IlhamRamadhan-IR/api-team-management-system/services"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 func main() {
 	db := app.InitDatabase()
-
+	validate := validator.New()
 	teamRepository := repositories.NewRepositoryTeam(db)
-	teamService := services.NewServiceTeam(teamRepository)
+	teamService := services.NewServiceTeam(teamRepository, validate)
 	teamController := controllers.NewControllerTeam(teamService)
 
-	projectRepository := repositories.NewRepositoryProject(db)
-	projectService := services.NewServiceProject(projectRepository)
-	projectController := controllers.NewControllerProject(projectService)
-
-	r := gin.Default()
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	api := r.Group("/api")
 	{
 		team := api.Group("/team")
 		{
-			team.GET("/getteams", teamController.FindAllTeams)
-			team.GET("/getteam/:teamcode", teamController.FindByIdTeam)
-		}
-		project := api.Group("/project")
-		{
-			project.GET("/getprojects", projectController.FindAllProjects)
-			project.GET("/getproject/:projectcode", projectController.FindByIdProject)
+			team.GET("/teams", teamController.FindAllTeams)
+			team.GET("/:team_code", teamController.FindByIdTeam)
+			team.POST("/", teamController.CreateTeam)
+			team.PUT("/:team_code", teamController.UpdateTeam)
+			team.DELETE("/:team_code", teamController.DeleteTeam)
 		}
 	}
 	r.Run()

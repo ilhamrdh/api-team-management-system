@@ -5,6 +5,9 @@ import (
 )
 
 type TeamRepository interface {
-	FindByIdTeam(teamcode string) (domain.Team, error)
-	FindAllTeams() ([]domain.Team, error)
+	CreateTeam(team *domain.Team) (*domain.Team, error)
+	UpdateTeam(teamCode string, team *domain.Team) (*domain.Team, error)
+	DeleteTeam(teamCode string) error
+	FindByIdTeam(teamcode string) (*domain.Team, error)
+	FindAllTeams() ([]*domain.Team, error)
 }

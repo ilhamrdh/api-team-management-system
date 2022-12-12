@@ -7,7 +7,7 @@ import (
 
 type TeamService interface {
 	CreateTeam(request *request.TeamRequest) (*response.TeamResponse, error)
-	UpdateTeam(teamCode string, request *request.TeamRequest) (*response.TeamResponse, error)
+	UpdateTeam(teamCode string, request *request.TeamRequestUpdate) (*response.TeamResponse, error)
 	DeleteTeam(teamCode string) error
 	FindByIdTeam(teamCode string) (*response.TeamResponse, error)
 	FindAllTeams() ([]*response.TeamResponse, error)

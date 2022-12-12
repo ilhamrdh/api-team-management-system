@@ -34,14 +34,28 @@ func (repository *TeamRepositoryImpl) FindAllTeams() ([]*domain.Team, error) {
 }
 
 func (repository *TeamRepositoryImpl) CreateTeam(team *domain.Team) (*domain.Team, error) {
-	err := repository.DB.Create(&team).Error
+	err := repository.DB.Exec("INSERT INTO team (team_code,team_name,leader,project_based,level,status) VALUES (?,?,?,?,?,?)",
+		team.TeamCode,
+		team.TeamName,
+		team.Leader,
+		team.ProjectBased,
+		team.Level,
+		team.Status,
+	).Error
 	if err != nil {
 		return nil, err
 	}
 	return team, nil
 }
 func (repository *TeamRepositoryImpl) UpdateTeam(teamCode string, team *domain.Team) (*domain.Team, error) {
-	err := repository.DB.Model(&domain.Team{TeamCode: teamCode}).Updates(team).Find(team).Error
+	err := repository.DB.Exec("UPDATE team SET team_name=?,leader=?,project_based=?,level=?,status=? WHERE team_code=?",
+		team.TeamName,
+		team.Leader,
+		team.ProjectBased,
+		team.Level,
+		team.Status,
+		teamCode,
+	).Error
 	if err != nil {
 		return nil, err
 	}

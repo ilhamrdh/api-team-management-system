@@ -56,14 +56,13 @@ func (service *TeamServiceImpl) CreateTeam(request *request.TeamRequest) (*respo
 	return helper.ToTeamResponse(team), nil
 }
 
-func (service *TeamServiceImpl) UpdateTeam(teamCode string, request *request.TeamRequest) (*response.TeamResponse, error) {
+func (service *TeamServiceImpl) UpdateTeam(teamCode string, request *request.TeamRequestUpdate) (*response.TeamResponse, error) {
 	_, err := service.TeamRepository.FindByIdTeam(teamCode)
 	if err != nil {
 		return nil, err
 	}
 
 	team, err := service.TeamRepository.UpdateTeam(teamCode, &domain.Team{
-		TeamCode:     request.TeamCode,
 		TeamName:     request.TeamName,
 		Leader:       request.Leader,
 		ProjectBased: request.ProjectBased,

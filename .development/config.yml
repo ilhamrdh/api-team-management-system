@@ -1,0 +1,10 @@
+server:
+  PORT: 8080
+
+database:
+  #  Database Development
+  DB_USER: "root"
+  DB_PASS: ""
+  DB_NAME: "team_management_system"
+  DB_HOST: "localhost"
+  DB_PORT: 3306

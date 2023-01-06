@@ -46,3 +46,39 @@ func ToProjectResponses(projects []*domain.Project) []*response.ProjectResponse 
 	}
 	return projectResponses
 }
+
+func ToUserResponse(user *domain.User) *response.UserResponse {
+	return &response.UserResponse{
+		Id:        user.ID,
+		FirstName: user.FirstName,
+		LastName:  user.LastName,
+		Email:     user.Email,
+		Username:  user.Username,
+		Password:  user.Password,
+		CreatedAt: user.CreatedAt,
+		UpdatedAt: user.UpdatedAt,
+		DeletedAt: user.DeletedAt,
+	}
+}
+
+func ToUserResponses(users []*domain.User) []*response.UserResponse {
+	var userResponses []*response.UserResponse
+	for _, user := range users {
+		userResponses = append(userResponses, ToUserResponse(user))
+	}
+	return userResponses
+}
+
+func ToLoginResponse(user *domain.User) *response.LoginResponse {
+	return &response.LoginResponse{
+		Username: user.Username,
+		Password: user.Password,
+	}
+}
+func ToLoginResponses(users []*domain.User) []*response.LoginResponse {
+	var userResponses []*response.LoginResponse
+	for _, user := range users {
+		userResponses = append(userResponses, ToLoginResponse(user))
+	}
+	return userResponses
+}

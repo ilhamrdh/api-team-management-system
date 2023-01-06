@@ -21,7 +21,7 @@ func NewControllerProject(r *gin.RouterGroup, projectService services.ProjectSer
 
 	r.GET("/projects", projectController.FindAllProject)
 	r.GET("/:project_code", projectController.FindByIdProject)
-	r.POST("/", projectController.CreateProject)
+	r.POST("", projectController.CreateProject)
 	r.PUT("/:project_code", projectController.UpdateProject)
 	r.DELETE("/:project_code", projectController.DeleteProject)
 }

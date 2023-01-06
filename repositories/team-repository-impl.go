@@ -17,7 +17,7 @@ func NewRepositoryTeam(db *gorm.DB) TeamRepository {
 
 func (repository *TeamRepositoryImpl) FindByIdTeam(teamCode string) (*domain.Team, error) {
 	var team *domain.Team
-	err := repository.DB.Where("team_code = ?", teamCode).First(&team).Error
+	err := repository.DB.Model(&domain.Team{}).Where("team_code = ?", teamCode).First(&team).Error
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (repository *TeamRepositoryImpl) FindByIdTeam(teamCode string) (*domain.Tea
 
 func (repository *TeamRepositoryImpl) FindAllTeams() ([]*domain.Team, error) {
 	var teams []*domain.Team
-	err := repository.DB.Find(&teams).Error
+	err := repository.DB.Model(&domain.Team{}).Find(&teams).Error
 	if err != nil {
 		return nil, err
 	}
@@ -34,17 +34,21 @@ func (repository *TeamRepositoryImpl) FindAllTeams() ([]*domain.Team, error) {
 }
 
 func (repository *TeamRepositoryImpl) CreateTeam(team *domain.Team) (*domain.Team, error) {
-	err := repository.DB.Exec("INSERT INTO team (team_code,team_name,leader,project_based,level,status) VALUES (?,?,?,?,?,?)",
-		team.TeamCode,
-		team.TeamName,
-		team.Leader,
-		team.ProjectBased,
-		team.Level,
-		team.Status,
-	).Error
-	if err != nil {
+	tx := repository.DB.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+	if err := tx.Error; err != nil {
 		return nil, err
 	}
+	err := tx.Create(&team).Error
+	if err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	tx.Commit()
 	return team, nil
 }
 func (repository *TeamRepositoryImpl) UpdateTeam(teamCode string, team *domain.Team) (*domain.Team, error) {
@@ -63,12 +67,12 @@ func (repository *TeamRepositoryImpl) UpdateTeam(teamCode string, team *domain.T
 }
 
 func (repository *TeamRepositoryImpl) DeleteTeam(teamCode string) error {
-	tmcd, err := repository.FindByIdTeam(teamCode)
+	code, err := repository.FindByIdTeam(teamCode)
 	if err != nil {
 		return err
 	}
 	// response := repository.DB.Where("team_code = ?", teamCode).Delete(&domain.Team{})
-	response := repository.DB.Delete(&domain.Team{}, tmcd)
+	response := repository.DB.Model(&domain.Team{}).Delete(&domain.Team{}, code)
 	if response.Error != nil {
 		return response.Error
 	}

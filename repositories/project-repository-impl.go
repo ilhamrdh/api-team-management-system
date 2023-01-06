@@ -17,7 +17,7 @@ func NewRepositoryProject(db *gorm.DB) ProjectRepository {
 
 func (repository *ProjectRepositoryImpl) FindByIdProject(projectCode string) (*domain.Project, error) {
 	var project *domain.Project
-	err := repository.DB.Where("project_code = ?", projectCode).First(&project).Error
+	err := repository.DB.Model(&domain.Project{}).Where("project_code = ?", projectCode).First(&project).Error
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,7 @@ func (repository *ProjectRepositoryImpl) FindByIdProject(projectCode string) (*d
 }
 func (repository *ProjectRepositoryImpl) FindAllProjects() ([]*domain.Project, error) {
 	var projects []*domain.Project
-	err := repository.DB.Find(&projects).Error
+	err := repository.DB.Model(&domain.Project{}).Find(&projects).Error
 	if err != nil {
 		return nil, err
 	}
@@ -33,12 +33,7 @@ func (repository *ProjectRepositoryImpl) FindAllProjects() ([]*domain.Project, e
 }
 
 func (repository *ProjectRepositoryImpl) CreateProject(project *domain.Project) (*domain.Project, error) {
-	err := repository.DB.Exec("INSERT INTO project (project_code,project_name,deadline,status) VALUES (?,?,?,?)",
-		project.ProjectCode,
-		project.ProjectName,
-		project.Deadline,
-		project.Status,
-	).Error
+	err := repository.DB.Model(&domain.Project{}).Create(&project).Error
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +57,7 @@ func (repository *ProjectRepositoryImpl) DeleteProject(projectCode string) error
 	if err != nil {
 		return err
 	}
-	response := repository.DB.Delete(&domain.Project{}, pjcd)
+	response := repository.DB.Model(&domain.Project{}).Delete(&domain.Project{}, pjcd)
 	if response.Error != nil {
 		return response.Error
 	}

@@ -20,7 +20,7 @@ func NewControllerTeam(r *gin.RouterGroup, teamService services.TeamService) {
 	}
 	r.GET("/teams", teamController.FindAllTeams)
 	r.GET("/:team_code", teamController.FindByIdTeam)
-	r.POST("/", teamController.CreateTeam)
+	r.POST("", teamController.CreateTeam)
 	r.PUT("/:team_code", teamController.UpdateTeam)
 	r.DELETE("/:team_code", teamController.DeleteTeam)
 }
